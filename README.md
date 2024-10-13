@@ -35,7 +35,7 @@ Getting Started
 1. Clone the repository
 bash
 Copy code
-git clone https://github.com/yourusername/ANN-Phishing-Detection-System.git
+git clone https://github.com/Fad-X/Artificial-Neural-Network-Phishing-Detection-System.git
 cd ANN-Phishing-Detection-System
 2. Create and activate a virtual environment (Optional but recommended)
 bash
