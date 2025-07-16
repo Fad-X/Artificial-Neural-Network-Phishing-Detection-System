@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phishing URL Detector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-start py-10 space-y-6">
+
+    <h1 class="text-3xl font-bold text-blue-600 mb-6">🔍 Phishing URL Detector</h1>
+
+    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md space-y-4">
+        <input type="text" id="urlInput" placeholder="Enter URL to check"
+               class="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"/>
+
+        <button onclick="checkURL()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+            Check URL
+        </button>
+
+        <p id="result" class="font-semibold text-lg text-center"></p>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md space-y-4">
+        <button onclick="trainModel()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+            Retrain Model
+        </button>
+
+        <pre id="trainResult" class="bg-gray-50 p-2 rounded text-sm overflow-x-auto max-h-60"></pre>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-3xl space-y-4">
+        <h2 class="text-xl font-semibold mb-2">🕑 Last 10 Predictions</h2>
+        <table class="min-w-full text-center border border-gray-300">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="border px-2 py-1">#</th>
+                    <th class="border px-2 py-1">URL</th>
+                    <th class="border px-2 py-1">Result</th>
+                </tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let history = [];
+
+        async function checkURL() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert("Please enter a URL!");
+                return;
+            }
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+            document.getElementById('result').textContent = `Result: ${data.result}`;
+
+            addToHistory(url, data.result);
+        }
+
+        async function trainModel() {
+            document.getElementById('trainResult').textContent = 'Training... Please wait.';
+
+            const response = await fetch('/train', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.details) {
+                document.getElementById('trainResult').textContent = data.details;
+            } else {
+                document.getElementById('trainResult').textContent = 'Error: ' + data.error;
+            }
+        }
+
+        function addToHistory(url, result) {
+            history.unshift({ url, result });
+            if (history.length > 10) history.pop();
+
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const table = document.getElementById('historyTable');
+            table.innerHTML = '';
+            history.forEach((entry, index) => {
+                table.innerHTML += `
+                    <tr>
+                        <td class="border px-2 py-1">${index + 1}</td>
+                        <td class="border px-2 py-1">${entry.url}</td>
+                        <td class="border px-2 py-1">${entry.result}</td>
+                    </tr>`;
+            });
+        }
+    </script>
+
+</body>
+</html>
