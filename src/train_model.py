@@ -20,7 +20,7 @@ def preprocess_data(X_urls, vectorizer=None):
     return X_processed, vectorizer
 
 # Step 1: Load and preprocess the data
-data_path = os.path.join('..', 'data', 'combined_url_data.csv')
+data_path = 'data_path = '../data/combined_url_data.csv'
 X = load_data(data_path)
 X_urls = X['url'].values
 y = X['label'].values
