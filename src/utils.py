@@ -12,7 +12,7 @@ def load_data(data_path):
     return pd.read_csv(data_path)
 
 # Load and preprocess the data
-data_path = os.path.join('..', 'data', 'phishing_data.csv')
+data_path = 'data/combined_url_data.csv'
 X = load_data(data_path)
 
 # Debugging: Check the structure of the loaded data
