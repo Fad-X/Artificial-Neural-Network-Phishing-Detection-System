@@ -14,8 +14,8 @@ from contextlib import redirect_stdout
 
 app = Flask(__name__, template_folder='../templates')
 
-MODEL_PATH = '../model/phishing_ann_model.h5'
-VECTORIZER_PATH = '../model/vectorizer.pkl'
+MODEL_PATH = './model/phishing_ann_model.h5'
+VECTORIZER_PATH = './model/vectorizer.pkl'
 DATA_PATH = './data/combined_url_data.csv'
 
 model = None
