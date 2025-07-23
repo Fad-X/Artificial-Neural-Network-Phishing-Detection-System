@@ -43,7 +43,7 @@ def predict():
         input_data = preprocess_data([url], vectorizer)
         input_data = np.array(input_data).reshape(1, -1)
         prediction = model.predict(input_data)
-        result = 'Phishing' if prediction[0][0] >= 0.5 else 'Legitimate'
+        result = 'Legitimate' if prediction[0][0] <= 0.4 else 'Phishing'
 
         return jsonify({'url': url, 'result': result})
 
